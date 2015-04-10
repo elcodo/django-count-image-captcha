@@ -44,17 +44,22 @@ class ImageCountCaptchaWidget(forms.MultiWidget):
         im_answer_size = im_answer.size
         im_other_size = im_other.size
 
+        padding = getattr(settings, 'CAPTCHA_IMAGE_PADDING', 0)
+
         im = Image.new(
             "RGBA",
-            getattr(settings, 'CAPTCHA_IMAGE_DIMENSIONS', (100, 50))
+            (
+                max((im_answer_size[0] + padding) * self.max_images, (im_other_size[0] + padding) * self.max_images),
+                max(im_answer_size[1], im_other_size[1])
+            )
         )
 
         for i in xrange(self.x):
-            im.paste(im_answer, (i * im_answer_size[0], 0), im_answer)
+            im.paste(im_answer, (i * (im_answer_size[0] + padding), 0), im_answer)
         for i in xrange(self.y):
             im.paste(
                 im_other,
-                (self.x * im_answer_size[0] + i * im_other_size[0], 0),
+                (self.x * (im_answer_size[0] + padding) + i * (im_other_size[0] + padding), 0),
                 im_other
             )
 
@@ -62,8 +67,15 @@ class ImageCountCaptchaWidget(forms.MultiWidget):
         output.seek(0)
         image_b64 = base64.b64encode(output.read())
 
+        image_position = getattr(settings, 'CAPTCHA_IMAGE_POSITION', "left")
+        if image_position == "left":
+            return mark_safe(
+                u'<img src="data:image/png;base64,%s" class="cp-image"> %s' % (
+                    image_b64,
+                    super(ImageCountCaptchaWidget, self).render(name, value, attrs)
+                ))
         return mark_safe(
-            u'<img src="data:image/png;base64,%s" class="cp-image"> %s' % (
-                image_b64,
-                super(ImageCountCaptchaWidget, self).render(name, value, attrs)
+            u'%s <img src="data:image/png;base64,%s" class="cp-image">' % (
+                super(ImageCountCaptchaWidget, self).render(name, value, attrs),
+                image_b64
             ))

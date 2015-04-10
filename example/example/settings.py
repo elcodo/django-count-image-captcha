@@ -103,6 +103,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-CAPTCHA_IMAGE_DIMENSIONS = (250, 50)
 CAPTCHA_IMAGE_ANSWER = os.path.join(STATIC_ROOT, 'images/circle.png')
 CAPTCHA_IMAGE_OTHER = os.path.join(STATIC_ROOT, 'images/square.png')
+CAPTCHA_IMAGE_PADDING = 10
+CAPTCHA_IMAGE_POSITION = "right"  # left/right
