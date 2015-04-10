@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='django-count-image-captcha',
-    version='0.1',
+    version='0.2',
     description='Captcha with image count challenge for Django 1.7+',
     long_description=open('README.md').read(),
     author='ELCODO',
