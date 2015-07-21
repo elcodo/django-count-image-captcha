@@ -35,6 +35,6 @@ class ImageCountCaptchaField(MultiValueField):
             # unhash and eval question. Compare to answer.
             unhashed_answer = eval(unhexlify(data_list[1][40:]).split(u"|")[0])
             if answer != unhashed_answer:
-                raise ValidationError(_(u'Please try again.'))
+                raise ValidationError(_(u'Incorrect, please try again.'))
             return answer
         return None
